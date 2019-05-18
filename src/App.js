@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { addGun, removeGun, addGunAsync} from "./index.redux";
+import { Button } from 'antd-mobile';
+import 'antd-mobile/dist/antd-mobile.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    constructor (props) {
+        super (props);
+    }
+
+    render () {
+        return(
+            <div>
+                <h2>现在有机枪{this.props.num}</h2>
+                <Button type='primary' onClick={this.props.addGun}>加机关枪</Button>
+                <br/>
+                <Button type='primary' onClick={this.props.addGunAsync}>拖两天加机关枪</Button>
+                <br/>
+                <Button type='danger' onClick={this.props.removeGun}>减机关枪</Button>
+            </div>
+        )
+    }
 }
+const mapStateToProps =  (state)=>{
+    return {num: state}
+};
+const actionCreators = {addGun, removeGun, addGunAsync};
 
-export default App;
+App = connect(mapStateToProps, actionCreators)(App);
+
+export default App
