@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addGun, removeGun, addGunAsync} from "./index.redux";
 import { Button } from 'antd-mobile';
-import 'antd-mobile/dist/antd-mobile.css'
+import 'antd-mobile/dist/antd-mobile.css';
+import { addGun, removeGun, addGunAsync} from "./index.redux";
+
+// const mapStateToProps =  (state)=>{
+//     return {num: state}
+// };
+// const actionCreators = {addGun, removeGun, addGunAsync};
+// App = connect(mapStateToProps, actionCreators)(App); //修改为@connect
+
+@connect(
+    //你要state里面的属性
+    state=>({num:state}),
+    //你要的什么方法放到props里，自动dispatch
+    {addGun, removeGun, addGunAsync}
+    )
 
 class App extends Component {
     constructor (props) {
@@ -22,11 +35,5 @@ class App extends Component {
         )
     }
 }
-const mapStateToProps =  (state)=>{
-    return {num: state}
-};
-const actionCreators = {addGun, removeGun, addGunAsync};
-
-App = connect(mapStateToProps, actionCreators)(App);
 
 export default App
