@@ -27,7 +27,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/data', function (req, res) {
-    res.json({name: 'react', type: 'IT man'})
+    res.json({user: 'react',age:26, type: 'IT man'})
 });
 
 app.listen(9093, function () {

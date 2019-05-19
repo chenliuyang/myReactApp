@@ -3,36 +3,35 @@ import ReactDom from 'react-dom';
 import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { Provider} from 'react-redux';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
-import { counter } from "./index.redux";
-import App from './App';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import reducer from './reducer'
+import Auth from './Auth';
+import Dashboard from './Dashboard';
+import './config'
+// 该学习第六章了
 
-const store = createStore(counter,compose(
+const store = createStore(reducer,compose(
     applyMiddleware(thunk),
     window.devToolsExtension? window.devToolsExtension():f=>f
 ));
+console.log(store.getState())
 
-function Erying () {
-    return <h2>二营</h2>
-}
-
-function Qibinglian () {
-    return <h2>骑兵连</h2>
-}
-//学习到4-8该学4-9
+// 登陆
+//     没有登陆信息
+// 页面 导航 + 显示 + 注销
+//     erying
+//     yiying
+//     qibinglian
+// router+redux
 ReactDom.render(
     <Provider store={store}>
         <BrowserRouter>
-            <div>
-                <ul>
-                    <li><Link to='/'>一营</Link></li>
-                    <li><Link to='/erying'>二营</Link></li>
-                    <li><Link to='/qibinglian'>骑兵连</Link></li>
-                </ul>
-                <Route path='/' exact component={App}></Route>
-                <Route path='/erying' component={Erying}></Route>
-                <Route path='/qibinglian' component={Qibinglian}></Route>
-            </div>
+            <Switch>
+                {/*只渲染命中的第一个Route*/}
+                <Route path='/login' exact component={Auth}></Route>
+                <Route path='/dashboard' component={Dashboard}></Route>
+                <Redirect to="/dashboard"/>
+            </Switch>
         </BrowserRouter>
         
     </Provider>,
