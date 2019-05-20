@@ -5,33 +5,29 @@ import thunk from 'redux-thunk'
 import { Provider} from 'react-redux';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import reducer from './reducer'
-import Auth from './Auth';
-import Dashboard from './Dashboard';
 import './config'
-// 该学习第六章了
+import Login from './container/login/login';
+import Register from './container/register/register';
+import AuthRoute from './component/authroute/authroute';
 
 const store = createStore(reducer,compose(
     applyMiddleware(thunk),
     window.devToolsExtension? window.devToolsExtension():f=>f
 ));
-console.log(store.getState())
-
-// 登陆
-//     没有登陆信息
-// 页面 导航 + 显示 + 注销
-//     erying
-//     yiying
-//     qibinglian
+function Boss() {
+    return <h2>BOSS</h2>
+}
+// 该学7-1了
 // router+redux
 ReactDom.render(
     <Provider store={store}>
         <BrowserRouter>
-            <Switch>
-                {/*只渲染命中的第一个Route*/}
-                <Route path='/login' exact component={Auth}></Route>
-                <Route path='/dashboard' component={Dashboard}></Route>
-                <Redirect to="/dashboard"/>
-            </Switch>
+            <div>
+                <AuthRoute></AuthRoute>
+                <Route path='/boss' component={Boss}></Route>
+                <Route path='/login' component={Login}></Route>
+                <Route path='/register' component={Register}></Route>
+            </div>
         </BrowserRouter>
         
     </Provider>,
