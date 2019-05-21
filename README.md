@@ -16,6 +16,8 @@
 
     babel-plugin-import,
 
+    browser-cookies,
+
     axios
 
 服务端使用的是nodeJS加mongodb，依赖的插件有:
