@@ -3,6 +3,7 @@ const utils = require('utility');
 const Router = express.Router();
 const models = require('./model');
 const User = models.getModel('user');
+const Chat = models.getModel('chat');
 const _filter = {pwd: 0, __v: 0};
 
 Router.get('/list', function (req, res) {
@@ -16,6 +17,25 @@ Router.get('/list', function (req, res) {
             return res.json({code: 0, data: doc})
         }
     })
+});
+Router.get('/getmsglist', function (req, res) {
+    const userid = req.cookies.userid;
+
+    User.find({}, function (err, userdoc) {
+        let users = {};
+        if (!err) {
+            userdoc.forEach(v=>{
+                users[v._id] = {name: v.user, avatar: v.avatar}
+            })
+            // {'$or':[{from: userid, to: userid}]}
+            Chat.find({'$or':[{from: userid}, {to: userid}]}, function (err, doc) {
+                if (!err) {
+                    return res.json({code: 0, msgs:doc, users: users});
+                }
+            })
+        }
+    })
+
 });
 Router.post('/updata', function (req, res) {
     const userid = req.cookies.userid;
@@ -85,7 +105,7 @@ Router.get('/info', function (req, res) {
 });
 
 function md5Pwd (pwd) {
-    const salt = 'chenliuyangyan_is_best_jaskljfkla2@L;'
+    const salt = 'chenliuyangyan_is_best_jaskljfkla2@L;';
     return utils.md5(utils.md5(pwd + salt));
 }
 

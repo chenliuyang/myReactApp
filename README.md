@@ -18,7 +18,9 @@
 
     browser-cookies,
 
-    axios
+    axios,
+
+    socket.io-client
 
 服务端使用的是nodeJS加mongodb，依赖的插件有:
 
@@ -29,6 +31,9 @@
     mongoose,
 
     nodemon, // 用于server的热启动
+
+    socket.io,
+
 
 
 前后端调试在package.json中添加"proxy": "http:localhost:9093"
