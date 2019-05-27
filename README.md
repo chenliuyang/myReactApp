@@ -34,6 +34,8 @@
 
     socket.io,
 
+     babel-cli // node 支持jsx
+
 
 
 前后端调试在package.json中添加"proxy": "http:localhost:9093"

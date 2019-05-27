@@ -2,14 +2,15 @@ import React from 'react';
 import io from 'socket.io-client';
 import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile';
 import { connect } from 'react-redux';
-import { getMsgList, sendMsg, recvMsg } from "../../redux/chat.redux";
+import { getMsgList, sendMsg, recvMsg, readMsg } from "../../redux/chat.redux";
 import { getChatId} from "../../util";
+import QueueAnim from 'rc-queue-anim'
 
 const socket = io('ws://localhost:9093');
 
 @connect(
     state=>state,
-    { getMsgList, sendMsg, recvMsg }
+    { getMsgList, sendMsg, recvMsg, readMsg }
 )
 class Chat extends React.Component {
     constructor (props) {
@@ -24,17 +25,17 @@ class Chat extends React.Component {
 
     }
     componentDidMount () {
-        if (this.props.chat.chatmsg.length) return;
-        this.props.getMsgList();
-        this.props.recvMsg();
-        // socket.on('recvmsg',  (msg)=>{
-        //     console.log(msg)
-        //     this.setState({
-        //         msg: [...this.state.msg, msg.text]
-        //     })
-        // })
-        this.fixCaeousel();
+        if (!this.props.chat.chatmsg.length) {
+            this.props.getMsgList();
+            this.props.recvMsg();
+        }
     }
+
+    componentWillUnmount () {
+        const to = this.props.match.params.user;
+        this.props.readMsg(to);
+    }
+
     fixCaeousel () {
         setTimeout(function () {
             window.dispatchEvent(new Event('resize'))
@@ -75,29 +76,32 @@ class Chat extends React.Component {
                 >
                     {users[userid].name}
                 </NavBar>
-                {chatmsgs.map(v=>{
-                    const avatar = require(`../img/${users[v.from].avatar}.png`)
-                    return v.from === userid?(
-                        <List key={v._id}>
-                            <Item
-                                thumb={avatar}
-                            >
-                                {v.content}
-                            </Item>
-                        </List>
-                        // <p key={v._id}>对方发来的：{v.content}</p>
-                    ):(
-                        <List key={v._id}>
-                            <Item
-                                extra={<img src={avatar} />}
-                                className='chat-me'>
-                                {v.content}
-                            </Item>
-                        </List>
-                        // <p key={v._id}>我发过去的：{v.content}</p>
-                    );
-                    // return <p key={v._id}>{v.content}</p>
-                })}
+                <QueueAnim delay={50}>
+                    {chatmsgs.map(v=>{
+                        const avatar = require(`../img/${users[v.from].avatar}.png`)
+                        return v.from === userid?(
+                            <List key={v._id}>
+                                <Item
+                                    thumb={avatar}
+                                >
+                                    {v.content}
+                                </Item>
+                            </List>
+                            // <p key={v._id}>对方发来的：{v.content}</p>
+                        ):(
+                            <List key={v._id}>
+                                <Item
+                                    extra={<img alt='pic' src={avatar} />}
+                                    className='chat-me'>
+                                    {v.content}
+                                </Item>
+                            </List>
+                            // <p key={v._id}>我发过去的：{v.content}</p>
+                        );
+                        // return <p key={v._id}>{v.content}</p>
+                    })}
+                </QueueAnim>
+
                 <div style={{height:50}}></div>
                 <div className='stick-footer'>
                     <List>
